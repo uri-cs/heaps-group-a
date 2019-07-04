@@ -27,11 +27,17 @@ void MinHeap::swim(){
    * children are greater than it.
    */
   void MinHeap::sink(int i){
-    //   int temp = size;
-    // while(array[temp]!= size && array[temp] < array [temp*2]){
-    //     swap(&array[temp],&array[temp*2]);
-    //     temp = temp * 2;
-    // }
+if(array[i] > array[(2*i)+1] && array[i] > array[(2*i)]){
+return;
+}
+else if(array[i] > array[2*i]){
+swap(&array[i], &array[2*i]);
+return sink(2*i);
+}
+else if(array[i] > array[(2*i)+1]){
+swap(&array[i], &array[2*i]);
+return sink(2*i+1);
+}
   }
 
   /** search(int i, int data)
@@ -40,7 +46,20 @@ void MinHeap::swim(){
    * equal to size or data is less than the MinHeap's value at i.
    */
   bool MinHeap::search(int i, int data){
-      return true;
+      if(i>=size){
+          return false;
+      }
+      else if(array[i] == data){
+          return true;
+      }
+      else if(data< array [i]){
+          return false;
+      }
+        else
+        {
+            search(i++,data);
+        }
+      
   }
 
   /** erase(int i, int data)
@@ -48,7 +67,15 @@ void MinHeap::swim(){
    * calling remove on i if data is found in the tree.
    * Does nothing if data is not found in the subtree.
    */
-  void MinHeap::erase(int i, int data){}
+  void MinHeap::erase(int i, int data){
+      if(search(i,data)==false){
+          return;
+      }
+      else if(array[i]==data){
+          remove(i);
+      }
+
+  }
 
 
   MinHeap::MinHeap(unsigned int cap){
@@ -72,7 +99,6 @@ void MinHeap::swim(){
       }
       else{
           array[size+1] = data;
-          //this->print();
           size++;
           swim();
       }
@@ -109,7 +135,7 @@ void MinHeap::swim(){
    * Throws an error if the heap is empty.
    */
   int MinHeap::peek(){
-      return (size == 0)? throw"no peek is emptey": array[1];
+      return (size == 0)? throw"no peek is empt": array[1];
   }
 
   /** search(int data)
@@ -117,7 +143,7 @@ void MinHeap::swim(){
    * found and false otherwise.
    */
   bool MinHeap::search(int data){
-      return true;
+      return search(1,data);
   }
 
   /** remove(int i)
@@ -126,7 +152,16 @@ void MinHeap::swim(){
    * Throws an error if the heap is empty or the index is out of bounds.
    */
   int MinHeap::remove(int i){
-      return 0;
+      if(i>size || i ==0 || size ==0);
+      throw"error";
+      if(!search(array[i])){
+          throw"not found";
+      }
+      int ret = array[i];
+      swap(&array[1], &array[i]);
+      size--;
+      swim();
+      return ret;
   }
 
   /** erase(int data)
